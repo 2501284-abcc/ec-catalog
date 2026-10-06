@@ -100,7 +100,7 @@ function buildQuery(array $overrides = []): string
                    value="<?= htmlspecialchars($keyword) ?>">
             </select>
             <select name="sort">
-                <option value="new" <?= $sort === 'new' ? 'selected' : '' ?>>新着順</option>
+                <option value="new" <?= $sort === "new" ? "selected" : "" ?>>新着順</option>
                 <option value="price_asc" <?= $sort === 'price_asc' ? 'selected' : '' ?>>価格が安い順</option>
                 <option value="price_desc" <?= $sort === 'price_desc' ? 'selected' : '' ?>>価格が高い順</option>
             </select>
