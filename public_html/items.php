@@ -15,6 +15,16 @@ $category = trim($_GET['category'] ?? '');
 $page     = max(1, (int) ($_GET['page'] ?? 1));
 $perPage  = 9;
 
+// 並び替え：ORDER BYの列名・方向はプレースホルダにできないため、
+// 必ずホワイトリスト（許可リスト）に照合してから使う。
+$sortOptions = [
+    'new'        => 'created_at DESC',
+    'price_asc'  => 'price ASC',
+    'price_desc' => 'price DESC',
+];
+$sort    = $_GET['sort'] ?? 'new';
+$orderBy = $sortOptions[$sort] ?? $sortOptions['new'];
+
 // ---- ② WHERE句を動的に組み立てる（必ずプレースホルダを使うこと）------------
 // TODO（中級）: $keyword が空でなければ "name LIKE :keyword" 相当の条件を追加する
 //   ヒント：LIKE検索では % と _ がワイルドカードとして特別な意味を持つため、
@@ -51,8 +61,9 @@ $offset     = ($page - 1) * $perPage;
 $sql = "SELECT id, name, price, image, stock, category
         FROM items
         {$whereSql}
-        ORDER BY created_at DESC
+        ORDER BY {$orderBy}
         LIMIT {$perPage} OFFSET {$offset}";
+
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $items = $stmt->fetchAll();
@@ -63,7 +74,12 @@ $categories = $pdo->query('SELECT DISTINCT category FROM items WHERE category IS
 // ページ送りリンクで検索条件を保持するためのクエリ文字列を組み立てる
 function buildQuery(array $overrides = []): string
 {
-    $base = ['keyword' => $_GET['keyword'] ?? '', 'category' => $_GET['category'] ?? '', 'page' => $_GET['page'] ?? 1];
+    $base = [
+        'keyword'  => $_GET['keyword'] ?? '',
+        'category' => $_GET['category'] ?? '',
+        'sort'     => $_GET['sort'] ?? 'new',
+        'page'     => $_GET['page'] ?? 1,
+    ];
     return http_build_query(array_merge($base, $overrides));
 }
 ?>
@@ -82,13 +98,11 @@ function buildQuery(array $overrides = []): string
         <form class="search-form" method="get" action="items.php">
             <input type="text" name="keyword" placeholder="商品名で検索"
                    value="<?= htmlspecialchars($keyword) ?>">
-            <select name="category">
-                <option value="">すべてのカテゴリ</option>
-                <?php foreach ($categories as $c): ?>
-                    <option value="<?= htmlspecialchars($c) ?>" <?= $c === $category ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($c) ?>
-                    </option>
-                <?php endforeach; ?>
+            </select>
+            <select name="sort">
+                <option value="new" <?= $sort === 'new' ? 'selected' : '' ?>>新着順</option>
+                <option value="price_asc" <?= $sort === 'price_asc' ? 'selected' : '' ?>>価格が安い順</option>
+                <option value="price_desc" <?= $sort === 'price_desc' ? 'selected' : '' ?>>価格が高い順</option>
             </select>
             <button type="submit">検索</button>
         </form>
