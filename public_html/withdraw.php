@@ -9,6 +9,10 @@ require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/auth.php';
 
 require_login();
+
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -22,9 +26,19 @@ require_login();
     <main>
         <h1>退会</h1>
         <p>退会すると、会員情報と書いたレビューがすべて消える。元には戻せない。</p>
-        <form action="withdraw-process.php" method="post">
-            <button type="submit" class="btn danger">退会する</button>
-        </form>
+    <form action="withdraw-process.php" method="post">
+
+        <input
+            type="hidden"
+            name="csrf_token"
+            value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>"
+        >
+
+        <button type="submit" class="btn danger">
+            退会する
+        </button>
+
+    </form>
     </main>
 </body>
 </html>
