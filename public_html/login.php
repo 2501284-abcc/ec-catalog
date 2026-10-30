@@ -21,6 +21,12 @@ session_start();
 <form action="login-process.php" method="post">
 
     <p>
+        <a href="register.php">
+            はじめての方は会員登録
+        </a>
+    </p>
+
+    <p>
         <label>
             メールアドレス<br>
             <input type="email" name="email" required>
