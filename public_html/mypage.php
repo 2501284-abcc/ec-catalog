@@ -1,16 +1,9 @@
 <?php
 
 require_once __DIR__ . '/../includes/config.php';
+require_once __DIR__ . '/../includes/auth.php';
 
-session_start();
-
-if (!isset($_SESSION['user_id'])) {
-    $_SESSION['login_error']
-        = '続けるにはログインが必要です';
-
-    header('Location: login.php');
-    exit;
-}
+require_login();
 
 $user = null;
 
