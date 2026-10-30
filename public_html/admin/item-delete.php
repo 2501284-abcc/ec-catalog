@@ -4,6 +4,28 @@
  */
 require_once __DIR__ . '/../../includes/config.php';
 
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    $_SESSION['login_error']
+        = '続けるにはログインが必要です';
+
+    header('Location: ../login.php');
+    exit;
+}
+
+if ($_SESSION['role'] !== 'admin') {
+
+    http_response_code(403);
+
+    echo 'このページにアクセスする権限がありません。
+    <a href="../mypage.php">
+    マイページへ戻る
+    </a>';
+
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: item-list.php');
     exit;

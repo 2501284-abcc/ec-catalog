@@ -4,6 +4,14 @@ require_once __DIR__ . '/../includes/config.php';
 
 session_start();
 
+if (!isset($_SESSION['user_id'])) {
+    $_SESSION['login_error']
+        = '続けるにはログインが必要です';
+
+    header('Location: login.php');
+    exit;
+}
+
 $user = null;
 
 if (isset($_SESSION['user_id'])) {
@@ -41,6 +49,14 @@ if (isset($_SESSION['user_id'])) {
         会員種別：
         <?= $user['role'] === 'admin' ? '管理者' : '一般会員' ?>
     </p>
+
+    <?php if ($user['role'] === 'admin'): ?>
+    <p>
+        <a href="admin/item-list.php">
+            商品管理へ
+        </a>
+    </p>
+    <?php endif; ?>
 
     <p>
         <a href="logout.php">ログアウト</a>
