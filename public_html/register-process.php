@@ -78,6 +78,11 @@ if ($errors) {
 }
 
 // 登録
+$hash = password_hash(
+    $password,
+    PASSWORD_DEFAULT
+);
+
 $stmt = $pdo->prepare(
     'INSERT INTO users (email, password, name)
      VALUES (?, ?, ?)'
@@ -85,7 +90,7 @@ $stmt = $pdo->prepare(
 
 $stmt->execute([
     $email,
-    $password,
+    $hash,
     $name
 ]);
 
