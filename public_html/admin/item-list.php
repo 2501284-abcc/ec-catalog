@@ -5,29 +5,12 @@
  * 注意：この時点ではまだログイン・権限チェックを実装していません。
  * 第9回で require_admin() を先頭に追加し、一般ユーザーがアクセスできないようにします。
  */
+
 require_once __DIR__ . '/../../includes/config.php';
+require_once __DIR__ . '/../../includes/auth.php';
 
-session_start();
+require_admin();
 
-if (!isset($_SESSION['user_id'])) {
-    $_SESSION['login_error']
-        = '続けるにはログインが必要です';
-
-    header('Location: ../login.php');
-    exit;
-}
-
-if ($_SESSION['role'] !== 'admin') {
-
-    http_response_code(403);
-
-    echo 'このページにアクセスする権限がありません。
-    <a href="../mypage.php">
-    マイページへ戻る
-    </a>';
-
-    exit;
-}
 
 $items = $pdo->query('SELECT id, name, price, stock, category FROM items ORDER BY created_at DESC')->fetchAll();
 ?>
