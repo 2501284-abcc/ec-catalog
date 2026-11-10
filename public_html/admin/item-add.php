@@ -52,7 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
-    <header><a href="../index.php">Tsuchi-to-Hi</a></header>
+        <header>
+            <a href="../index.php">Tsuchi-to-Hi</a>
+            <a class="btn" style="border: 1px solid; padding: .4rem .8rem;" href="../logout.php">ログアウト</a>
+        </header>
+
     <main>
         <h1>商品登録</h1>
 
