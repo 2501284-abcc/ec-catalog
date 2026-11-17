@@ -40,16 +40,12 @@ if (!$item) {
         <p><?= nl2br(htmlspecialchars($item['description'] ?? '')) ?></p>
         <p>在庫：<?= (int) $item['stock'] ?>点</p>
 
-        <!--
-            「カートに入れる」ボタンは第14回でカート機能を実装するまでは
-            仮のリンクです。ログイン機能（第7〜9回）も未実装のため、
-            ここでは表示のみにとどめています。
-        -->
-       <form action="cart-insert.php" method="post">
+        <form action="cart-insert.php" method="post">
             <input type="hidden" name="item_id" value="<?= (int) $item['id'] ?>">
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
             <button>カートに入れる</button>
         </form>
+
         <p><a href="cart.php">カートを見る</a></p>
     </main>
 
